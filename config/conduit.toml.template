@@ -1,0 +1,18 @@
+[global]
+server_name = "__MATRIX_HOSTNAME__"
+database_path = "/var/lib/matrix-conduit"
+database_backend = "rocksdb"
+port = 6167
+max_request_size = 20000000
+
+# Registration is disabled after initial admin user setup.
+# To add new users, temporarily set allow_registration = true with a
+# registration_token, register, then set it back to false.
+allow_registration = false
+
+allow_federation = true
+
+# Disable to avoid leaking server info to upstream
+allow_check_for_updates = false
+
+trusted_servers = ["matrix.org"]

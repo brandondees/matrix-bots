@@ -1,0 +1,10 @@
+# Matrix homeserver — TLS provisioned automatically via Let's Encrypt
+__MATRIX_HOSTNAME__ {
+    reverse_proxy /_matrix/* conduit:6167
+    reverse_proxy /_synapse/client/* conduit:6167
+}
+
+# Matrix federation port (8448)
+__MATRIX_HOSTNAME__:8448 {
+    reverse_proxy conduit:6167
+}

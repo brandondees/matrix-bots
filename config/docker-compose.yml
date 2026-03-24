@@ -1,0 +1,31 @@
+services:
+  conduit:
+    image: ghcr.io/element-hq/conduit:latest
+    container_name: conduit
+    restart: unless-stopped
+    volumes:
+      - ./conduit/conduit.toml:/etc/matrix-conduit/conduit.toml:ro
+      - conduit_data:/var/lib/matrix-conduit
+    environment:
+      CONDUIT_CONFIG: /etc/matrix-conduit/conduit.toml
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+      - "8448:8448"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - conduit
+
+volumes:
+  conduit_data:
+  caddy_data:
+  caddy_config:
