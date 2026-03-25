@@ -24,21 +24,33 @@ set -a; source "$ENV_FILE"; set +a
 : "${DROPLET_SSH_KEY:?DROPLET_SSH_KEY must be set in .env}"
 
 REPO_URL="https://github.com/brandondees/matrix-bots.git"
-SSH_OPTS="-i ${DROPLET_SSH_KEY} -o StrictHostKeyChecking=accept-new"
+SSH_OPTS="-i ${DROPLET_SSH_KEY} -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10"
 
 echo "================================================================"
 echo "  Bootstrapping droplet"
-echo "  Host       : root@${DROPLET_IP}"
+echo "  Host       : ${DROPLET_IP}"
 echo "  Deploy user: ${DEPLOY_USER}"
 echo "  Repo       : ${REPO_URL}"
 echo "================================================================"
 echo ""
 
+# Determine which user can connect — root works on a fresh droplet;
+# after SSH hardening runs it's locked out and we fall back to deploy user.
+if ssh $SSH_OPTS "root@${DROPLET_IP}" true 2>/dev/null; then
+    SSH_USER="root"
+    SUDO=""
+    echo ">>> Connecting as root"
+else
+    SSH_USER="${DEPLOY_USER}"
+    SUDO="sudo"
+    echo ">>> Root login disabled (already hardened) — connecting as ${DEPLOY_USER}"
+fi
+
 echo ">>> Copying bootstrap script to droplet"
-scp $SSH_OPTS "$REPO_ROOT/scripts/00-bootstrap.sh" "root@${DROPLET_IP}:~/"
+scp $SSH_OPTS "$REPO_ROOT/scripts/00-bootstrap.sh" "${SSH_USER}@${DROPLET_IP}:/tmp/00-bootstrap.sh"
 
 echo ">>> Running bootstrap on droplet"
-ssh $SSH_OPTS "root@${DROPLET_IP}" "bash ~/00-bootstrap.sh '${DEPLOY_USER}' '${REPO_URL}'"
+ssh $SSH_OPTS "${SSH_USER}@${DROPLET_IP}" "${SUDO} bash /tmp/00-bootstrap.sh '${DEPLOY_USER}' '${REPO_URL}'"
 
 echo ""
 echo "================================================================"
