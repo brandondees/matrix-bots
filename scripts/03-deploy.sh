@@ -20,7 +20,7 @@ if [ ! -f "$ENV_FILE" ]; then
     echo "  cp .env.example .env  then fill in your values."
     exit 1
 fi
-set -a; source "$ENV_FILE"; set +a
+set -a; source "$ENV_FILE"; set +a  # values with special chars must be single-quoted in .env
 
 : "${MATRIX_SERVER_NAME:?MATRIX_SERVER_NAME must be set in .env}"
 : "${CONDUIT_REGISTRATION_TOKEN:?CONDUIT_REGISTRATION_TOKEN must be set in .env}"

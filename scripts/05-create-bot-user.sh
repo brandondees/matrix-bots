@@ -17,7 +17,7 @@ if [ ! -f "$ENV_FILE" ]; then
     echo "ERROR: .env not found. Copy .env.example to .env and fill it in."
     exit 1
 fi
-set -a; source "$ENV_FILE"; set +a
+set -a; source "$ENV_FILE"; set +a  # values with special chars must be single-quoted in .env
 
 : "${DROPLET_IP:?DROPLET_IP must be set in .env}"
 : "${DEPLOY_USER:?DEPLOY_USER must be set in .env}"

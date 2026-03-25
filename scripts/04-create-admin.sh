@@ -23,7 +23,7 @@ ENV_FILE="$REPO_ROOT/.env"
 if [ ! -f "$ENV_FILE" ]; then
     echo "ERROR: .env not found"; exit 1
 fi
-set -a; source "$ENV_FILE"; set +a
+set -a; source "$ENV_FILE"; set +a  # values with special chars must be single-quoted in .env
 
 : "${MATRIX_SERVER_NAME:?MATRIX_SERVER_NAME must be set in .env}"
 : "${CONDUIT_REGISTRATION_TOKEN:?CONDUIT_REGISTRATION_TOKEN must be set in .env}"
