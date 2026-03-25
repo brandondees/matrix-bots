@@ -58,6 +58,11 @@ cd "$MATRIX_DIR"
 docker compose pull
 docker compose up -d
 
+# Restart conduit so it picks up any config changes (mounted files aren't
+# detected as changes by docker compose, so an explicit restart is needed).
+echo ">>> Restarting conduit to apply config"
+docker compose restart conduit
+
 echo ""
 echo ">>> Stack status"
 docker compose ps
