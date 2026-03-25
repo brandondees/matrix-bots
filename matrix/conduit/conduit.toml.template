@@ -1,0 +1,25 @@
+[global]
+server_name = "${MATRIX_SERVER_NAME}"
+database_path = "/var/lib/matrix-conduit"
+database_backend = "rocksdb"
+port = 6167
+max_request_size = 20_000_000
+
+# Set to true only temporarily when creating your admin user, then back to false.
+allow_registration = ${CONDUIT_ALLOW_REGISTRATION}
+
+# Token required to register — keeps open registration from being abused.
+registration_token = "${CONDUIT_REGISTRATION_TOKEN}"
+
+# Federation allows other Matrix servers to talk to yours.
+# Set to false for a completely private, isolated server.
+allow_federation = true
+
+# Disable telemetry / update checks for privacy.
+allow_check_for_updates = false
+
+# Trusted servers used for key verification of federated events.
+trusted_servers = ["matrix.org"]
+
+# Log level — use "warn" in production to reduce noise.
+log = "warn"

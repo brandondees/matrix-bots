@@ -1,0 +1,15 @@
+# Caddy reads MATRIX_SERVER_NAME from the environment (set in docker-compose.yml).
+# Caddy auto-provisions TLS via Let's Encrypt — DNS must resolve before first start.
+
+{$MATRIX_SERVER_NAME} {
+    encode gzip
+
+    # Matrix client & server API
+    reverse_proxy /_matrix/* conduit:6167
+    reverse_proxy /_synapse/client/* conduit:6167
+}
+
+# Matrix federation port — required for other servers to reach yours
+{$MATRIX_SERVER_NAME}:8448 {
+    reverse_proxy conduit:6167
+}

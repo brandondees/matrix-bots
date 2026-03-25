@@ -1,0 +1,11 @@
+# Local environment — never commit secrets
+.env
+
+# Generated configs (rendered from templates by deploy script)
+matrix/conduit/conduit.toml
+
+# Caddy auto-generated data (certs, etc.)
+matrix/caddy/data/
+
+# macOS
+.DS_Store

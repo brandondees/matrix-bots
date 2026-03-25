@@ -1,0 +1,36 @@
+services:
+  conduit:
+    image: ghcr.io/element-hq/conduit:latest
+    container_name: conduit
+    restart: unless-stopped
+    volumes:
+      - ./conduit/conduit.toml:/etc/matrix-conduit/conduit.toml:ro
+      - conduit_data:/var/lib/matrix-conduit
+    environment:
+      CONDUIT_CONFIG: /etc/matrix-conduit/conduit.toml
+    # Not exposed to host — Caddy proxies to it inside the Docker network
+    expose:
+      - "6167"
+
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3 (QUIC)
+      - "8448:8448"     # Matrix federation
+    volumes:
+      - ./caddy/config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/data:/data       # TLS certs — persisted, gitignored
+      - ./caddy/config:/config
+    environment:
+      # Passed through to Caddyfile via {$MATRIX_SERVER_NAME}
+      MATRIX_SERVER_NAME: ${MATRIX_SERVER_NAME}
+    depends_on:
+      - conduit
+
+volumes:
+  conduit_data:
+    # Named volume — survives container restarts and rebuilds
