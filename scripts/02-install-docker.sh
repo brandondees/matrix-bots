@@ -8,15 +8,15 @@ set -euo pipefail
 
 echo ">>> Installing prerequisites"
 export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq
+sudo apt-get update -qq
 # gettext-base provides envsubst, used by 03-deploy.sh to render conduit.toml
-apt-get install -y --no-install-recommends curl gettext-base ca-certificates
+sudo apt-get install -y --no-install-recommends curl gettext-base ca-certificates
 
 echo ">>> Installing Docker"
 if command -v docker &>/dev/null; then
     echo "    Docker already installed: $(docker --version)"
 else
-    curl -fsSL https://get.docker.com | sh
+    curl -fsSL https://get.docker.com | sudo sh
 fi
 
 echo ">>> Adding $USER to the docker group"
