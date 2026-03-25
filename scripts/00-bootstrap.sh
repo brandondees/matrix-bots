@@ -42,6 +42,10 @@ else
     adduser --disabled-password --gecos "" "$DEPLOY_USER"
 fi
 usermod -aG sudo "$DEPLOY_USER"
+# Passwordless sudo — this user was created with no password, so sudo would
+# otherwise block forever. Scoped to this user only.
+echo "${DEPLOY_USER} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${DEPLOY_USER}"
+chmod 440 "/etc/sudoers.d/${DEPLOY_USER}"
 
 # ── Copy SSH authorized_keys ───────────────────────────────────────────────────
 echo ">>> Copying SSH authorized_keys to $DEPLOY_USER"
