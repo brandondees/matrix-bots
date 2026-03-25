@@ -28,6 +28,13 @@ set -a; source "$ENV_FILE"; set +a
 : "${MATRIX_SERVER_NAME:?MATRIX_SERVER_NAME must be set in .env}"
 : "${CONDUIT_REGISTRATION_TOKEN:?CONDUIT_REGISTRATION_TOKEN must be set in .env}"
 
+CONDUIT_TOML="$MATRIX_DIR/conduit/conduit.toml"
+if [ ! -f "$CONDUIT_TOML" ]; then
+    echo "ERROR: $CONDUIT_TOML not found."
+    echo "  Run 'bash scripts/03-deploy.sh' first to render the config and start the stack."
+    exit 1
+fi
+
 HOMESERVER_URL="https://${MATRIX_SERVER_NAME}"
 REGISTER_URL="${HOMESERVER_URL}/_matrix/client/v3/register"
 
