@@ -59,15 +59,10 @@ dig +short matrix.yourdomain.com
 
 ## Step 2 — Bootstrap the Droplet (Script)
 
-The droplet starts with no git installed. Copy the bootstrap script from your local machine, then run it as root:
+Fill in `DROPLET_IP`, `DEPLOY_USER`, and `DROPLET_SSH_KEY` in your `.env`, then from your local machine:
 
 ```bash
-# From your local machine:
-scp scripts/00-bootstrap.sh root@<droplet-ip>:~/
-ssh root@<droplet-ip> 'bash ~/00-bootstrap.sh <deploy-username> <repo-url>'
-
-# Example:
-ssh root@<droplet-ip> 'bash ~/00-bootstrap.sh matrix https://github.com/you/matrix-bots.git'
+bash scripts/local-bootstrap.sh
 ```
 
 This script:
@@ -204,7 +199,8 @@ In your OpenFang config, add a Matrix channel entry. The exact keys depend on yo
 ├── .env.example                  # Template — copy to .env, never commit .env
 ├── .gitignore
 ├── scripts/
-│   ├── 00-bootstrap.sh           # scp to droplet and run as root — installs prereqs, clones repo, hardens SSH
+│   ├── local-bootstrap.sh        # Run from LOCAL machine — orchestrates the initial droplet setup
+│   ├── 00-bootstrap.sh           # Runs on droplet as root — installs prereqs, clones repo, hardens SSH
 │   ├── 01-secure-droplet.sh      # Called by 00-bootstrap.sh; also safe to run standalone
 │   ├── 02-install-docker.sh      # Run as deploy user: install Docker + gettext-base
 │   ├── 03-deploy.sh              # Render configs + start Docker Compose
