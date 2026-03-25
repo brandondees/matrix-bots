@@ -1,6 +1,6 @@
 services:
   conduit:
-    image: ghcr.io/element-hq/conduit:latest
+    image: matrixconduit/matrix-conduit:latest
     container_name: conduit
     restart: unless-stopped
     volumes:
