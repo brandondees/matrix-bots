@@ -32,7 +32,7 @@ echo ""
 echo ">>> Installing prerequisites (git, curl, gettext-base)"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y --no-install-recommends git curl gettext-base ca-certificates
+apt-get install -y --no-install-recommends git curl gettext-base ca-certificates ufw
 
 # ── Create deploy user (same logic as 01-secure-droplet.sh) ───────────────────
 echo ">>> Creating deploy user: $DEPLOY_USER"
